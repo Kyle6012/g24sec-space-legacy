@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Your updated navbar.css -->
+  <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+  <!-- Bottom Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-icons">
+      <!-- Profile -->
+      <a href="/profile/<%= user.username %>" title="Profile">
+        <img src="<%= user.profilePic || '/images/default.png' %>" alt="Profile" class="profile-pic">
+      </a>
+
+      <!-- Home -->
+      <a href="/feed" title="Home">
+        <i class="fas fa-home"></i>
+      </a>
+
+      <!-- Search -->
+      <a href="javascript:void(0)" onclick="toggleSearch()" title="Search">
+        <i class="fas fa-search"></i>
+      </a>
+
+      <!-- Chat -->
+      <a href="/user/message" title="Chat">
+        <i class="fas fa-comment"></i>
+        <% if (typeof unreadCount !== 'undefined' && unreadCount > 0) { %>
+          <span class="unread-dot"><%= unreadCount %></span>
+        <% } %>
+      </a>
+
+      <!-- Notifications -->
+      <a href="/notifications" title="Notifications">
+        <i class="fas fa-bell"></i>
+      </a>
+
+      <!-- Dark Mode Toggle -->
+      <a href="javascript:void(0)" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+        <i id="darkModeIcon" class="fas fa-moon"></i>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Search Overlay -->
+  <div id="searchTab" class="search-container hidden">
+    <i class="fas fa-arrow-left back-icon" title="Back" onclick="toggleSearch()"></i>
+    <form action="/search" method="GET" class="search-form">
+      <input type="text" name="q" placeholder="Search..." autocomplete="on">
+      <button type="submit"><i class="fas fa-search"></i></button>
+    </form>
+  </div>
+
+  <script>
+    // Apply stored theme on load
+    document.addEventListener("DOMContentLoaded", () => {
+      const theme = localStorage.getItem('theme') || 'light-mode';
+      document.documentElement.classList.add(theme);
+      const icon = document.getElementById('darkModeIcon');
+      if (theme === 'dark-mode') icon.classList.replace('fa-moon','fa-sun');
+    });
+
+    // Toggle search overlay
+    function toggleSearch() {
+      document.getElementById('searchTab').classList.toggle('hidden');
+    }
+
+    // Toggle dark mode and save preference
+    function toggleDarkMode() {
+      const htmlEl = document.documentElement;
+      htmlEl.classList.toggle('dark-mode');
+      const icon = document.getElementById('darkModeIcon');
+      if (htmlEl.classList.contains('dark-mode')) {
+        icon.classList.replace('fa-moon','fa-sun');
+        localStorage.setItem('theme','dark-mode');
+      } else {
+        icon.classList.replace('fa-sun','fa-moon');
+        localStorage.setItem('theme','light-mode');
+      }
+    }
+  </script>
+</body>
+</html>
